@@ -18,6 +18,7 @@ type User struct {
 	Telephone string     `gorm:"column:telephone;not null" json:"telephone"`
 	Birthday  *time.Time `gorm:"column:birthday" json:"birthday"`
 	DeleteAt  *time.Time `gorm:"column:delete_at" json:"delete_at"`
+	Password  *string    `gorm:"column:password" json:"password"`
 }
 
 // TableName User's table name

@@ -8,12 +8,12 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"shopping/internal/server"
+	"shopping/internal/service"
 )
 
 // Injectors from wire.go:
 
 func NewUserHttpServer() *gin.Engine {
-	engine := server.NewUserGin()
+	engine := service.NewUserGin()
 	return engine
 }
