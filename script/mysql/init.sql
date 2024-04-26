@@ -10,6 +10,7 @@ CREATE TABLE `user` (
     `telephone` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
     `birthday` date DEFAULT NULL,
     `delete_at` time DEFAULT NULL,
+    `password` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `telephone` (`telephone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
