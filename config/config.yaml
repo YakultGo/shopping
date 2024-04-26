@@ -1,2 +1,5 @@
 db:
   mysql: "root:root@tcp(127.0.0.1:13306)/shop?charset=utf8mb4&parseTime=True"
+user:
+  http:
+    port: 8081

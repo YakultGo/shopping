@@ -15,6 +15,11 @@ type Config struct {
 		Mysql string
 		Redis string
 	}
+	User struct {
+		Http struct {
+			Port int
+		}
+	}
 }
 
 var Conf = new(Config)
