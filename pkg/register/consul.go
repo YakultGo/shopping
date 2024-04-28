@@ -69,7 +69,7 @@ func (r *Registry) DeRegister(serviceId string) error {
 
 func (r *Registry) GracefulStop(serviceId string) error {
 	quit := make(chan os.Signal)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
 	<-quit
 	err := r.DeRegister(serviceId)
 	return err

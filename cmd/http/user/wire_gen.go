@@ -14,6 +14,7 @@ import (
 // Injectors from wire.go:
 
 func NewUserHttpServer() *gin.Engine {
-	engine := service.NewUserGin()
+	userHandler := service.NewUserHandler()
+	engine := service.NewUserGin(userHandler)
 	return engine
 }

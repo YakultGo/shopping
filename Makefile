@@ -10,6 +10,8 @@ api:
 	       $(API_PROTO_FILES)
 
 .PHONY: gen
-# generate mysql struct
+# generate
 gen:
-	go run cmd/gen/main.go
+	go mod tidy
+	go get github.com/google/wire/cmd/wire@latest
+	go generate ./...

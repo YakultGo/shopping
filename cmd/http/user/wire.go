@@ -10,6 +10,7 @@ import (
 
 func NewUserHttpServer() *gin.Engine {
 	wire.Build(
+		service.NewUserHandler,
 		service.NewUserGin,
 	)
 	return new(gin.Engine)
