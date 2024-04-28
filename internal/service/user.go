@@ -19,6 +19,6 @@ func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 }
 
 func (u *UserHandler) signUp(ctx *gin.Context) {
-	type Request struct {
+	type Req struct {
 	}
 }

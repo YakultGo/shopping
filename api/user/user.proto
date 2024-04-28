@@ -11,7 +11,8 @@ service User {
 }
 
 message GetUserRequest {
-  int64 id = 1;
+  string name = 1;
+  string telephone = 2;
 }
 message GetUserResponse {
   int64 id = 1;
