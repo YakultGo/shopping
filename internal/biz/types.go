@@ -1,4 +1,4 @@
-package service
+package biz
 
 import "github.com/gin-gonic/gin"
 

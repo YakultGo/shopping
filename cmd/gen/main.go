@@ -14,13 +14,13 @@ func main() {
 		Mode:          gen.WithDefaultQuery | gen.WithQueryInterface,
 		FieldNullable: true,
 	})
-	g.UseDB(connectDB("root:root@tcp(127.0.0.1:13306)/shop?charset=utf8mb4&parseTime=True"))
+	g.UseDB(connect())
 	g.ApplyBasic(g.GenerateAllTable()...)
 	g.Execute()
 }
 
-func connectDB(dsn string) *gorm.DB {
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+func connect() *gorm.DB {
+	db, err := gorm.Open(mysql.Open("root:root@tcp(127.0.0.1:13306)/shop?charset=utf8mb4&parseTime=True"), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}

@@ -12,7 +12,7 @@ const TableNameUser = "user"
 
 // User mapped from table <user>
 type User struct {
-	ID        int64      `gorm:"column:id;primaryKey" json:"id"`
+	ID        int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	Name      string     `gorm:"column:name;not null" json:"name"`
 	Address   *string    `gorm:"column:address" json:"address"`
 	Telephone string     `gorm:"column:telephone;not null" json:"telephone"`

@@ -10,14 +10,18 @@ import (
 	"net"
 	userPb "shopping/api/user"
 	"shopping/config"
+	"shopping/internal/data/query"
 	"shopping/internal/server"
-	"shopping/pkg/register"
+	"shopping/pkg/consul/register"
 	"shopping/pkg/util"
 )
 
 func main() {
 	config.InitConfig()
 	config.InitLogger("grpc-user")
+	// 初始化mysql
+	query.SetDefault(config.NewMysql())
+
 	port, err := util.GetFreePort()
 	if err != nil {
 		zap.S().Error(err)

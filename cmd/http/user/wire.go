@@ -5,13 +5,15 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"shopping/internal/service"
+	"shopping/internal/biz"
+	"shopping/pkg/consul/connect"
 )
 
 func NewUserHttpServer() *gin.Engine {
 	wire.Build(
-		service.NewUserHandler,
-		service.NewUserGin,
+		biz.NewUserHandler,
+		connect.NewUserGrpc,
+		biz.NewUserGin,
 	)
 	return new(gin.Engine)
 }
