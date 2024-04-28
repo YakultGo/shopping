@@ -7,6 +7,7 @@ import (
 	userPb "shopping/api/user"
 	"shopping/internal/data/model"
 	"shopping/internal/data/query"
+	"time"
 )
 
 type UserServer struct {
@@ -54,8 +55,28 @@ func (us *UserServer) CreateUser(ctx context.Context, req *userPb.CreateUserRequ
 	}, nil
 }
 func (us *UserServer) UpdateUser(ctx context.Context, req *userPb.UpdateUserRequest) (*userPb.UpdateUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+	u := query.User
+	// 将时间转换为time.Time类型
+	birthday, err := time.Parse("2006-01-02", req.Birthday)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "[UpdateUser] birthday format error")
+	}
+	result, err := u.WithContext(ctx).Where(u.ID.Eq(req.Id)).Updates(model.User{
+		Name:      req.Name,
+		Telephone: req.Telephone,
+		Address:   &req.Address,
+		Birthday:  &birthday,
+		Password:  &req.Password,
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "[UpdateUser] update user failed")
+	}
+	if result.RowsAffected == 0 {
+		return nil, status.Errorf(codes.NotFound, "[UpdateUser] user not found")
+	}
+	return &userPb.UpdateUserResponse{Id: req.Id}, nil
 }
+
 func (us *UserServer) DeleteUser(ctx context.Context, req *userPb.DeleteUserRequest) (*userPb.DeleteUserResponse, error) {
 	u := query.User
 	result, err := u.WithContext(ctx).Where(u.ID.Eq(req.Id)).Delete()
