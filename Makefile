@@ -8,3 +8,8 @@ api:
  	       --go_out=paths=source_relative:./api \
  	       --go-grpc_out=paths=source_relative:./api \
 	       $(API_PROTO_FILES)
+
+.PHONY: gen
+# generate mysql struct
+gen:
+	go run cmd/gen/main.go
