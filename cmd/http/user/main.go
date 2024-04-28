@@ -9,5 +9,5 @@ func main() {
 	config.InitConfig()
 	config.InitLogger("http-user")
 	server := NewUserHttpServer()
-	server.Run(fmt.Sprintf(":%d", config.Conf.User.Http.Port))
+	server.Run(fmt.Sprintf("%s:%d", config.Conf.User.Http.Host, config.Conf.User.Http.Port))
 }
