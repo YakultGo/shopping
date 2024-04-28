@@ -1,5 +1,13 @@
 db:
   mysql: "root:root@tcp(127.0.0.1:13306)/shop?charset=utf8mb4&parseTime=True"
+consul:
+  host: "127.0.0.1"
+  port: 8500
 user:
   http:
+    host: "127.0.0.1"
     port: 8081
+  grpc:
+    host: "127.0.0.1"
+    service_name: "user"
+    tags: ["user", "grpc"]
