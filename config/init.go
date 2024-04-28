@@ -12,14 +12,24 @@ import (
 
 type Config struct {
 	DB struct {
-		Mysql string
-		Redis string
-	}
+		Mysql string `mapstructure:"mysql"`
+		Redis string `mapstructure:"redis"`
+	} `mapstructure:"db"`
 	User struct {
 		Http struct {
-			Port int
-		}
+			Host string `mapstructure:"host"`
+			Port int    `mapstructure:"port"`
+		} `mapstructure:"http"`
+		Grpc struct {
+			Host        string   `mapstructure:"host"`
+			ServiceName string   `mapstructure:"service_name"` // 带下划线的字段要是用mapstructure标签
+			Tags        []string `mapstructure:"tags"`
+		} `mapstructure:"grpc"`
 	}
+	Consul struct {
+		Host string `mapstructure:"host"`
+		Port int    `mapstructure:"port"`
+	} `mapstructure:"consul"`
 }
 
 var Conf = new(Config)
@@ -53,7 +63,7 @@ func getEncoder() zapcore.Encoder {
 	encoderConfig := zap.NewProductionEncoderConfig()
 	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
-	encoderConfig.EncodeCaller = zapcore.ShortCallerEncoder
+	encoderConfig.EncodeCaller = zapcore.FullCallerEncoder
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
