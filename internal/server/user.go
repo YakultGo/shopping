@@ -21,7 +21,7 @@ func NewUserServer() *UserServer {
 // GetUser 根据用户ID获取用户信息
 func (us *UserServer) GetUser(ctx context.Context, req *userPb.GetUserRequest) (*userPb.GetUserResponse, error) {
 	u := query.User
-	user, err := u.WithContext(ctx).Where(u.ID.Eq(req.Id)).First()
+	user, err := u.WithContext(ctx).Where(u.Name.Eq(req.Name)).First()
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "[GetUser] user not found")
 	}
@@ -29,6 +29,7 @@ func (us *UserServer) GetUser(ctx context.Context, req *userPb.GetUserRequest) (
 		Id:        user.ID,
 		Name:      user.Name,
 		Telephone: user.Telephone,
+		Password:  user.Password,
 	}
 	if user.Address != nil {
 		resp.Address = *user.Address
@@ -45,6 +46,7 @@ func (us *UserServer) CreateUser(ctx context.Context, req *userPb.CreateUserRequ
 	user := &model.User{
 		Name:      req.Name,
 		Telephone: req.Telephone,
+		Password:  req.Password,
 	}
 	err := u.WithContext(ctx).Create(user)
 	if err != nil {
@@ -66,7 +68,7 @@ func (us *UserServer) UpdateUser(ctx context.Context, req *userPb.UpdateUserRequ
 		Telephone: req.Telephone,
 		Address:   &req.Address,
 		Birthday:  &birthday,
-		Password:  &req.Password,
+		Password:  req.Password,
 	})
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "[UpdateUser] update user failed")

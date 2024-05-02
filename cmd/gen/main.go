@@ -7,7 +7,6 @@ import (
 )
 
 //go:generate go run main.go
-
 func main() {
 	g := gen.NewGenerator(gen.Config{
 		OutPath:       "../../internal/data/query",

@@ -21,3 +21,10 @@ services:
       - "8302:8302"
       - "8600:8600/udp"
     command: ["agent", "-dev", "-client=0.0.0.0"]
+  redis:
+    container_name: redis
+    image: 'bitnami/redis:7.2.4'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '16379:6379'

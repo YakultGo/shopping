@@ -2,7 +2,6 @@ syntax = "proto3";
 package api.user;
 
 option go_package = "shopping/api/user;userPb";
-//go:generate protoc -I
 service User {
   rpc GetUser(GetUserRequest) returns (GetUserResponse) {};
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
@@ -11,7 +10,7 @@ service User {
 }
 
 message GetUserRequest {
-  int64 id = 1;
+  string name = 1;
 }
 message GetUserResponse {
   int64 id = 1;
@@ -19,11 +18,13 @@ message GetUserResponse {
   string address = 3;
   string telephone = 4;
   string birthday = 5;
+  string password = 6;
 }
 
 message CreateUserRequest {
   string name = 1;
   string telephone = 2;
+  string password = 3;
 }
 
 message CreateUserResponse {

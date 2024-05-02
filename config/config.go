@@ -11,15 +11,23 @@ type Config struct {
 	} `mapstructure:"db"`
 	User struct {
 		Http struct {
-			Host string `mapstructure:"host"`
-			Port int    `mapstructure:"port"`
+			Host        string `mapstructure:"host"`
+			Port        int    `mapstructure:"port"`
+			ServiceName string `mapstructure:"service_name"`
 		} `mapstructure:"http"`
 		Grpc struct {
 			Host        string   `mapstructure:"host"`
 			ServiceName string   `mapstructure:"service_name"` // 带下划线的字段要是用mapstructure标签
 			Tags        []string `mapstructure:"tags"`
 		} `mapstructure:"grpc"`
-	}
+	} `mapstructure:"user"`
+	Sms struct {
+		Grpc struct {
+			Host        string   `mapstructure:"host"`
+			ServiceName string   `mapstructure:"service_name"` // 带下划线的字段要是用mapstructure标签
+			Tags        []string `mapstructure:"tags"`
+		} `mapstructure:"grpc"`
+	} `mapstructure:"sms"`
 	Consul struct {
 		Host string `mapstructure:"host"`
 		Port int    `mapstructure:"port"`

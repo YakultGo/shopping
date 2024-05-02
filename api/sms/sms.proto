@@ -1,0 +1,27 @@
+syntax = "proto3";
+package api.user;
+
+option go_package = "shopping/api/sms;smsPb";
+service Sms {
+    rpc SendCode(SendCodeRequest) returns (SendCodeResponse) {}
+    rpc VerifyCode(VerifyCodeRequest) returns (VerifyCodeResponse) {}
+}
+
+message SendCodeRequest {
+    string phone = 1;
+    string biz = 2;
+}
+
+message SendCodeResponse {
+    string code = 1;
+}
+
+message VerifyCodeRequest {
+    string phone = 1;
+    string code = 2;
+    string biz = 3;
+}
+
+message VerifyCodeResponse {
+    bool success = 1;
+}

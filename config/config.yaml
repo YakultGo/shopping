@@ -1,5 +1,6 @@
 db:
   mysql: "root:root@tcp(127.0.0.1:13306)/shop?charset=utf8mb4&parseTime=True"
+  redis: "localhost:16379"
 consul:
   host: "127.0.0.1"
   port: 8500
@@ -7,7 +8,13 @@ user:
   http:
     host: "127.0.0.1"
     port: 8081
+    service_name: "user-http"
   grpc:
     host: "127.0.0.1"
-    service_name: "user"
+    service_name: "user-grpc"
     tags: ["user", "grpc"]
+sms:
+  grpc:
+    host: "127.0.0.1"
+    service_name: "sms-grpc"
+    tags: [ "sms", "grpc" ]

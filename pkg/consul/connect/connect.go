@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	smsPb "shopping/api/sms"
 	userPb "shopping/api/user"
 	"shopping/config"
 )
@@ -24,4 +25,20 @@ func NewUserGrpc() userPb.UserClient {
 		return nil
 	}
 	return userPb.NewUserClient(userConn)
+}
+
+func NewSmsGrpc() smsPb.SmsClient {
+	smsConn, err := grpc.Dial(
+		fmt.Sprintf("consul://%s:%d/%s?wait=14s",
+			config.Conf.Consul.Host,
+			config.Conf.Consul.Port,
+			config.Conf.Sms.Grpc.ServiceName),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
+	)
+	if err != nil {
+		zap.S().Errorf("[NewSmsGrpc] grpc dial err: %v", err)
+		return nil
+	}
+	return smsPb.NewSmsClient(smsConn)
 }

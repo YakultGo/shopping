@@ -8,7 +8,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"shopping/config"
 	"shopping/internal/biz"
+	"shopping/internal/middlewares"
+	"shopping/internal/middlewares/jwt"
 	"shopping/pkg/consul/connect"
 )
 
@@ -16,7 +19,11 @@ import (
 
 func NewUserHttpServer() *gin.Engine {
 	userClient := connect.NewUserGrpc()
-	userHandler := biz.NewUserHandler(userClient)
-	engine := biz.NewUserGin(userHandler)
+	smsClient := connect.NewSmsGrpc()
+	cmdable := config.NewRedis()
+	handler := jwt.NewRedisJWTHandler(cmdable)
+	userHandler := biz.NewUserHandler(userClient, smsClient, handler)
+	v := middlewares.NewMiddlewares(handler)
+	engine := biz.NewUserGin(userHandler, v)
 	return engine
 }

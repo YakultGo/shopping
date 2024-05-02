@@ -8,26 +8,23 @@ import (
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"net"
-	userPb "shopping/api/user"
+	smsPb "shopping/api/sms"
 	"shopping/config"
-	"shopping/internal/data/query"
 	"shopping/pkg/consul/register"
 	"shopping/pkg/util"
 )
 
 func main() {
 	config.InitConfig()
-	config.InitLogger(config.Conf.User.Grpc.ServiceName)
-	// 初始化mysql
-	query.SetDefault(config.NewMysql())
+	config.InitLogger(config.Conf.Sms.Grpc.ServiceName)
 
 	port, err := util.GetFreePort()
 	if err != nil {
 		zap.S().Error(err)
 	}
 	grpcServer := grpc.NewServer()
-	userPb.RegisterUserServer(grpcServer, NewUserGrpc())
-	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", config.Conf.User.Grpc.Host, port))
+	smsPb.RegisterSmsServer(grpcServer, NewSmsGrpc())
+	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", config.Conf.Sms.Grpc.Host, port))
 	if err != nil {
 		zap.S().Error(err)
 	}
@@ -41,21 +38,21 @@ func main() {
 	registerClient := register.NewRegistryClient(config.Conf.Consul.Host, config.Conf.Consul.Port)
 	ServiceId := fmt.Sprintf("%s", uuid.NewV4())
 	err = registerClient.Register(
-		config.Conf.User.Grpc.Host,
+		config.Conf.Sms.Grpc.Host,
 		port,
-		config.Conf.User.Grpc.ServiceName,
-		config.Conf.User.Grpc.Tags,
+		config.Conf.Sms.Grpc.ServiceName,
+		config.Conf.Sms.Grpc.Tags,
 		ServiceId,
 	)
 	if err != nil {
-		zap.S().Errorf("register user to consul failed, err:%v", err)
+		zap.S().Errorf("register sms to consul failed, err:%v", err)
 	}
 	// grpc服务启动成功
-	zap.S().Infof("grpc user server start success, port: %d", port)
+	zap.S().Infof("grpc sms server start success, port: %d", port)
 	// 优雅关闭
 	err = registerClient.GracefulStop(ServiceId)
 	if err != nil {
-		zap.S().Error("user服务注销失败: ", err.Error())
+		zap.S().Error("sms服务注销失败: ", err.Error())
 	}
-	zap.S().Infof("user服务注销成功")
+	zap.S().Infof("sms服务注销成功")
 }
