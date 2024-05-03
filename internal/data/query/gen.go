@@ -16,34 +16,44 @@ import (
 )
 
 var (
-	Q    = new(Query)
-	User *user
+	Q         = new(Query)
+	Good      *good
+	Inventory *inventory
+	User      *user
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
+	Good = &Q.Good
+	Inventory = &Q.Inventory
 	User = &Q.User
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:   db,
-		User: newUser(db, opts...),
+		db:        db,
+		Good:      newGood(db, opts...),
+		Inventory: newInventory(db, opts...),
+		User:      newUser(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	User user
+	Good      good
+	Inventory inventory
+	User      user
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:   db,
-		User: q.User.clone(db),
+		db:        db,
+		Good:      q.Good.clone(db),
+		Inventory: q.Inventory.clone(db),
+		User:      q.User.clone(db),
 	}
 }
 
@@ -57,18 +67,24 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:   db,
-		User: q.User.replaceDB(db),
+		db:        db,
+		Good:      q.Good.replaceDB(db),
+		Inventory: q.Inventory.replaceDB(db),
+		User:      q.User.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	User IUserDo
+	Good      IGoodDo
+	Inventory IInventoryDo
+	User      IUserDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		User: q.User.WithContext(ctx),
+		Good:      q.Good.WithContext(ctx),
+		Inventory: q.Inventory.WithContext(ctx),
+		User:      q.User.WithContext(ctx),
 	}
 }
 
