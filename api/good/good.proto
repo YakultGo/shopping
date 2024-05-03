@@ -1,0 +1,80 @@
+syntax = "proto3";
+package api.good;
+
+option go_package = "shopping/api/good;goodPb";
+service Good {
+  rpc ListGoodByKeyword(ListGoodByKeywordRequest) returns (ListGoodByKeywordResponse) {}
+  rpc ListGoodByCategory(ListGoodByCategoryRequest) returns (ListGoodByCategoryResponse) {}
+  rpc AddGood(AddGoodRequest) returns (AddGoodResponse) {}
+  rpc GetGood(GetGoodRequest) returns (GetGoodResponse) {}
+  rpc UpdateGood(UpdateGoodRequest) returns (UpdateGoodResponse) {}
+  rpc DeleteGood(DeleteGoodRequest) returns (DeleteGoodResponse) {}
+}
+message ListGoodByKeywordRequest {
+  int64 page = 1;
+  int64 pageSize = 2;
+  string keyword = 3;
+}
+message ListGoodByKeywordResponse {
+  repeated good goodList = 1;
+}
+message good {
+  int64 id = 1;
+  string description = 2;
+  int64 price = 3;
+  string shop = 4;
+  string category = 5;
+  int64 deal = 6;
+  bool postFree = 7;
+  string location = 8;
+}
+
+message ListGoodByCategoryRequest {
+  int64 page = 1;
+  int64 pageSize = 2;
+  string category = 3;
+}
+message ListGoodByCategoryResponse {
+  repeated good goodList = 1;
+}
+
+message AddGoodRequest {
+  string description = 1;
+  int64 price = 2;
+  string shop = 3;
+  string category = 4;
+  int64 deal = 5;
+  bool postFree = 6;
+  string location = 7;
+}
+message AddGoodResponse {
+  int64 id = 1;
+}
+
+message GetGoodRequest {
+  int64 id = 1;
+}
+message GetGoodResponse {
+  good good = 1;
+}
+message UpdateGoodRequest {
+  int64 id = 1;
+  string description = 2;
+  int64 price = 3;
+  string shop = 4;
+  string category = 5;
+  int64 deal = 6;
+  bool postFree = 7;
+  string location = 8;
+}
+
+message UpdateGoodResponse {
+  int64 id = 1;
+}
+
+message DeleteGoodRequest {
+  int64 id = 1;
+}
+message DeleteGoodResponse {
+  int64 id = 1;
+}
