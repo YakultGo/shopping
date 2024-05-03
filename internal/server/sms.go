@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 	smsPb "shopping/api/sms"
 	"shopping/pkg/util"
 )
@@ -39,8 +40,10 @@ func (s *SmsServer) SendCode(ctx context.Context, req *smsPb.SendCodeRequest) (*
 			Code: code,
 		}, nil
 	case -1:
+		zap.S().Error("发送验证码太频繁")
 		return nil, errors.New("发送验证码太频繁")
 	default:
+		zap.S().Error("系统错误")
 		return nil, errors.New("系统错误")
 	}
 }
@@ -55,10 +58,13 @@ func (s *SmsServer) VerifyCode(ctx context.Context, req *smsPb.VerifyCodeRequest
 		return &smsPb.VerifyCodeResponse{Success: true}, nil
 	case -1:
 		// 频繁出现可能是被恶意攻击
+		zap.S().Error("验证码错误次数太多")
 		return &smsPb.VerifyCodeResponse{Success: false}, errors.New("验证码错误次数太多")
 	case -2:
+		zap.S().Error("验证码错误")
 		return &smsPb.VerifyCodeResponse{Success: false}, errors.New("验证码错误")
 	default:
+		zap.S().Error("系统错误")
 		return &smsPb.VerifyCodeResponse{Success: false}, errors.New("系统错误")
 	}
 }

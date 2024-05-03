@@ -32,6 +32,7 @@ func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 	ug.POST("/sendCode", u.sendCode)
 	ug.POST("/login", u.login)
 	ug.POST("/logout", u.logout)
+	ug.POST("/modify", u.addAddress)
 }
 
 func (u *UserHandler) signUp(ctx *gin.Context) {
@@ -139,5 +140,38 @@ func (u *UserHandler) logout(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"msg": "退出成功",
+	})
+}
+
+func (u *UserHandler) addAddress(ctx *gin.Context) {
+	type Req struct {
+		Address  string `json:"address,omitempty"`
+		Birthday string `json:"birthday,omitempty"`
+	}
+	var req Req
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		zap.S().Errorf("[addAddress] invalid params: %v", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	idStr, _ := ctx.Get("userID")
+	userID, ok := idStr.(int64)
+	if !ok {
+		zap.S().Errorf("[addAddress] get userID failed")
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "系统错误"})
+		return
+	}
+	_, err := u.userClient.UpdateUser(ctx, &userPb.UpdateUserRequest{
+		Id:       userID,
+		Address:  req.Address,
+		Birthday: req.Birthday,
+	})
+	if err != nil {
+		zap.S().Errorf("[addAddress] update user failed: %v", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg": "更新信息成功",
 	})
 }

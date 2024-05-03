@@ -9,9 +9,8 @@ import (
 //go:generate go run main.go
 func main() {
 	g := gen.NewGenerator(gen.Config{
-		OutPath:       "../../internal/data/query",
-		Mode:          gen.WithDefaultQuery | gen.WithQueryInterface,
-		FieldNullable: true,
+		OutPath: "../../internal/data/query",
+		Mode:    gen.WithDefaultQuery | gen.WithQueryInterface,
 	})
 	g.UseDB(connect())
 	g.ApplyBasic(g.GenerateAllTable()...)

@@ -1,7 +1,6 @@
 create database if not exists shop;
 use shop;
 
-
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
     `id` bigint NOT NULL AUTO_INCREMENT,

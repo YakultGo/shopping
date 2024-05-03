@@ -2,9 +2,9 @@ package jwt
 
 import (
 	"encoding/gob"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"go.uber.org/zap"
 	"net/http"
 	"time"
 )
@@ -42,13 +42,13 @@ func (l *LoginJWTMiddlewareBuilder) Build() gin.HandlerFunc {
 		})
 		if err != nil {
 			ctx.String(http.StatusUnauthorized, "未登录")
-			fmt.Println("解析token失败", err)
+			zap.S().Errorf("解析token失败: %v", err)
 			ctx.Abort()
 			return
 		}
 		if !token.Valid {
 			ctx.String(http.StatusUnauthorized, "未登录")
-			fmt.Println("token无效")
+			zap.S().Error("token无效")
 			ctx.Abort()
 			return
 		}
@@ -59,11 +59,12 @@ func (l *LoginJWTMiddlewareBuilder) Build() gin.HandlerFunc {
 		}
 		err = l.CheckSession(ctx, claims.Ssid)
 		if err != nil {
-			fmt.Println("session校验失败", err)
+			zap.S().Errorf("session校验失败: %v", err)
 			ctx.String(http.StatusUnauthorized, "未登录")
 			ctx.Abort()
 			return
 		}
 		ctx.Set("claims", claims)
+		ctx.Set("userID", claims.UserId)
 	}
 }

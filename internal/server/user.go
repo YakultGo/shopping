@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	userPb "shopping/api/user"
@@ -31,12 +32,6 @@ func (us *UserServer) GetUser(ctx context.Context, req *userPb.GetUserRequest) (
 		Telephone: user.Telephone,
 		Password:  user.Password,
 	}
-	if user.Address != nil {
-		resp.Address = *user.Address
-	}
-	if user.Birthday != nil {
-		resp.Birthday = user.Birthday.String()
-	}
 	return resp, nil
 }
 
@@ -50,6 +45,7 @@ func (us *UserServer) CreateUser(ctx context.Context, req *userPb.CreateUserRequ
 	}
 	err := u.WithContext(ctx).Create(user)
 	if err != nil {
+		zap.S().Errorf("[CreateUser] create user failed, err: %v", err)
 		return nil, status.Errorf(codes.Internal, "[CreateUser] create user failed")
 	}
 	return &userPb.CreateUserResponse{
@@ -59,21 +55,28 @@ func (us *UserServer) CreateUser(ctx context.Context, req *userPb.CreateUserRequ
 func (us *UserServer) UpdateUser(ctx context.Context, req *userPb.UpdateUserRequest) (*userPb.UpdateUserResponse, error) {
 	u := query.User
 	// 将时间转换为time.Time类型
-	birthday, err := time.Parse("2006-01-02", req.Birthday)
+	var birthday time.Time
+	var err error
+	if req.Birthday != "" {
+		birthday, err = time.Parse("2006-01-02 ", req.Birthday)
+	}
 	if err != nil {
+		zap.S().Errorf("[UpdateUser] birthday format error, err: %v", err)
 		return nil, status.Errorf(codes.InvalidArgument, "[UpdateUser] birthday format error")
 	}
 	result, err := u.WithContext(ctx).Where(u.ID.Eq(req.Id)).Updates(model.User{
 		Name:      req.Name,
 		Telephone: req.Telephone,
-		Address:   &req.Address,
-		Birthday:  &birthday,
+		Address:   req.Address,
+		Birthday:  birthday,
 		Password:  req.Password,
 	})
 	if err != nil {
+		zap.S().Errorf("[UpdateUser] update user failed, err: %v", err)
 		return nil, status.Errorf(codes.Internal, "[UpdateUser] update user failed")
 	}
 	if result.RowsAffected == 0 {
+		zap.S().Errorf("[UpdateUser] user not found")
 		return nil, status.Errorf(codes.NotFound, "[UpdateUser] user not found")
 	}
 	return &userPb.UpdateUserResponse{Id: req.Id}, nil
@@ -83,9 +86,11 @@ func (us *UserServer) DeleteUser(ctx context.Context, req *userPb.DeleteUserRequ
 	u := query.User
 	result, err := u.WithContext(ctx).Where(u.ID.Eq(req.Id)).Delete()
 	if err != nil {
+		zap.S().Errorf("[DeleteUser] delete user failed, err: %v", err)
 		return nil, status.Errorf(codes.Internal, "[DeleteUser] delete user failed")
 	}
 	if result.RowsAffected == 0 {
+		zap.S().Errorf("[DeleteUser] user not found")
 		return nil, status.Errorf(codes.NotFound, "[DeleteUser] user not found")
 	}
 	return &userPb.DeleteUserResponse{Id: req.Id}, nil
