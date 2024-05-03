@@ -17,6 +17,7 @@ func NewUserHttpServer() *gin.Engine {
 		connect.NewUserGrpc,
 		connect.NewSmsGrpc,
 		biz.NewUserHandler,
+		biz.NewGoodHandler,
 		config.NewRedis,
 		jwt.NewRedisJWTHandler,
 		middlewares.NewMiddlewares,

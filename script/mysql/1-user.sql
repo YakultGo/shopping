@@ -8,7 +8,6 @@ CREATE TABLE `user` (
     `address` varchar(255) DEFAULT NULL,
     `telephone` varchar(30) NOT NULL ,
     `birthday` date DEFAULT NULL,
-    `delete_at` time DEFAULT NULL,
     `password` varchar(255) NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `telephone` (`telephone`)

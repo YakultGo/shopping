@@ -18,3 +18,8 @@ sms:
     host: "127.0.0.1"
     service_name: "sms-grpc"
     tags: [ "sms", "grpc" ]
+good:
+  grpc:
+    host: "127.0.0.1"
+    service_name: "good-grpc"
+    tags: [ "good", "grpc" ]

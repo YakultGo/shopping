@@ -13,6 +13,15 @@ func main() {
 		Mode:    gen.WithDefaultQuery | gen.WithQueryInterface,
 	})
 	g.UseDB(connect())
+	//autoUpdateTimeField := gen.FieldGORMTag("update_time", func(tag field.GormTag) field.GormTag {
+	//	return tag.Set("autoUpdateTime", "true")
+	//})
+	//autoCreateTimeField := gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
+	//	return tag.Set("autoCreateTime", "true")
+	//})
+	//softDeleteField := gen.FieldType("delete_time", "soft_delete.DeletedAt")
+	//fieldOpts := []gen.ModelOpt{autoCreateTimeField, autoUpdateTimeField, softDeleteField}
+	//g.ApplyBasic(g.GenerateAllTable(fieldOpts...)...)
 	g.ApplyBasic(g.GenerateAllTable()...)
 	g.Execute()
 }

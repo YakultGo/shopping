@@ -12,6 +12,7 @@ func NewMiddlewares(hdl jwt.Handler) []gin.HandlerFunc {
 		jwt.NewLoginJWTMiddlewareBuilder(hdl).
 			IgnorePath("/user/signUp").
 			IgnorePath("/user/login").
+			IgnorePath("/user/delete").
 			Build(),
 	}
 }

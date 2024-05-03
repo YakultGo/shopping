@@ -32,7 +32,6 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 	_user.Address = field.NewString(tableName, "address")
 	_user.Telephone = field.NewString(tableName, "telephone")
 	_user.Birthday = field.NewTime(tableName, "birthday")
-	_user.DeleteAt = field.NewTime(tableName, "delete_at")
 	_user.Password = field.NewString(tableName, "password")
 
 	_user.fillFieldMap()
@@ -49,7 +48,6 @@ type user struct {
 	Address   field.String
 	Telephone field.String
 	Birthday  field.Time
-	DeleteAt  field.Time
 	Password  field.String
 
 	fieldMap map[string]field.Expr
@@ -72,7 +70,6 @@ func (u *user) updateTableName(table string) *user {
 	u.Address = field.NewString(table, "address")
 	u.Telephone = field.NewString(table, "telephone")
 	u.Birthday = field.NewTime(table, "birthday")
-	u.DeleteAt = field.NewTime(table, "delete_at")
 	u.Password = field.NewString(table, "password")
 
 	u.fillFieldMap()
@@ -98,13 +95,12 @@ func (u *user) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 7)
+	u.fieldMap = make(map[string]field.Expr, 6)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["name"] = u.Name
 	u.fieldMap["address"] = u.Address
 	u.fieldMap["telephone"] = u.Telephone
 	u.fieldMap["birthday"] = u.Birthday
-	u.fieldMap["delete_at"] = u.DeleteAt
 	u.fieldMap["password"] = u.Password
 }
 

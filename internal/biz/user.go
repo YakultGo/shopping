@@ -33,6 +33,7 @@ func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 	ug.POST("/login", u.login)
 	ug.POST("/logout", u.logout)
 	ug.POST("/modify", u.addAddress)
+	ug.POST("/delete", u.deleteUser)
 }
 
 func (u *UserHandler) signUp(ctx *gin.Context) {
@@ -173,5 +174,28 @@ func (u *UserHandler) addAddress(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"msg": "更新信息成功",
+	})
+}
+
+func (u *UserHandler) deleteUser(ctx *gin.Context) {
+	type Req struct {
+		Id int64 `json:"id" validate:"required"`
+	}
+	var req Req
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		zap.S().Errorf("[deleteUser] invalid params: %v", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	_, err := u.userClient.DeleteUser(ctx, &userPb.DeleteUserRequest{
+		Id: req.Id,
+	})
+	if err != nil {
+		zap.S().Errorf("[deleteUser] delete user failed: %v", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg": "删除用户成功",
 	})
 }

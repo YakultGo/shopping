@@ -23,7 +23,8 @@ func NewUserHttpServer() *gin.Engine {
 	cmdable := config.NewRedis()
 	handler := jwt.NewRedisJWTHandler(cmdable)
 	userHandler := biz.NewUserHandler(userClient, smsClient, handler)
+	goodHandler := biz.NewGoodHandler()
 	v := middlewares.NewMiddlewares(handler)
-	engine := biz.NewUserGin(userHandler, v)
+	engine := biz.NewUserGin(userHandler, goodHandler, v)
 	return engine
 }

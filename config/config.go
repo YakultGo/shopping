@@ -28,6 +28,13 @@ type Config struct {
 			Tags        []string `mapstructure:"tags"`
 		} `mapstructure:"grpc"`
 	} `mapstructure:"sms"`
+	Good struct {
+		Grpc struct {
+			Host        string   `mapstructure:"host"`
+			ServiceName string   `mapstructure:"service_name"` // 带下划线的字段要是用mapstructure标签
+			Tags        []string `mapstructure:"tags"`
+		} `mapstructure:"grpc"`
+	} `mapstructure:"good"`
 	Consul struct {
 		Host string `mapstructure:"host"`
 		Port int    `mapstructure:"port"`
